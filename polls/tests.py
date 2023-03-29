@@ -1,6 +1,7 @@
 import datetime
 from django.test import TestCase
 from django.utils import timezone
+from django.urls import reverse
 from .models import Question
 
 class QuestionModelTests(TestCase):
@@ -22,3 +23,11 @@ class QuestionModelTests(TestCase):
         time = timezone.now()
         present_question = Question(question_text='Which is the best screenplay?',pub_date=time)
         self.assertIs(present_question.was_published_recently(), True)
+
+class QuestionIndexViewTests(TestCase):
+    def test_no_questions(self):
+        # if no question exists, an appropiate message is displayed
+        response = self.client.get(reverse('polls:index'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'No polls are available.')
+        self.assertQuerysetEqual(response.context['latest_question_list'], [])
