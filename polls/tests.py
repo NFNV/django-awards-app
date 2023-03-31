@@ -69,3 +69,12 @@ class QuestionIndexViewTests(TestCase):
             response.context['latest_question_list'],
             [past_question1, past_question2]
         )
+
+    def test_two_future_questions(self):
+        # The questions aren't displayed in the index view
+        future_question1 = create_question("Future question 1", 25)
+        future_question2 = create_question("Future question 2", 15)
+        response = self.client.get(reverse("polls:index"))
+        self.assertContains(response, 'No polls are available.')
+        self.assertQuerysetEqual(
+            response.context['latest_question_list'], [])
