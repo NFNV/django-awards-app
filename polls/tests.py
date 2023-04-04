@@ -71,10 +71,25 @@ class QuestionIndexViewTests(TestCase):
         )
 
     def test_two_future_questions(self):
-        # The questions aren't displayed in the index view
+        # The questions aren't displayed in the index view.
         future_question1 = create_question("Future question 1", 25)
         future_question2 = create_question("Future question 2", 15)
         response = self.client.get(reverse("polls:index"))
         self.assertContains(response, 'No polls are available.')
         self.assertQuerysetEqual(
             response.context['latest_question_list'], [])
+        
+class QuestionDetailViewTests(TestCase):
+    def test_future_question(self):
+        # The detail view of a question with a pub date in the future returns a 404 error not found.
+        future_question = create_question(question_text='Future question', days=30)
+        url = reverse('polls:detail', args=(future_question.pk,))
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 404)
+
+    def test_past_question(self):
+        # The detail view of a question with a pub date in the past desplays the question's text.
+        past_question = create_question(question_text='Past question', days=-30)
+        url = reverse('polls:detail', args=(past_question.pk,))
+        response = self.client.get(url)
+        self.assertContains(response, past_question.question_text)
