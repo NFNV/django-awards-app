@@ -1,0 +1,22 @@
+body {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+
+h1 {
+    background: linear-gradient(
+        to right,
+        hsl(0, 100%, 62%),
+        hsl(66, 100%, 59%)
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-align: center;
+}
+
+ul {
+    padding: 0;
+    margin: 0;
+    text-align: center;
+  }
